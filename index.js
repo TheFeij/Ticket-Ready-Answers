@@ -7,11 +7,15 @@ const https = require("https")
 
 
 // Load environment variables from the .env file using 'dotenv' package
-require("dotenv").config()
-// TO DO: Require a startup function to add routes to the express app
-// TO DO: Require a startup function to set up logging settings for winston package
-// TO DO: Require a startup function to set up error handling
-// TO DO: Require a startup function to set up the database
+require('dotenv').config()
+// Set up application routes by importing and calling the 'routes' module
+require("./startup/routes")(app)
+// Initialize logging configuration to capture application logs
+require("./startup/logging")()
+// Add listeners to handle unhandled errors
+require("./startup/errors")()
+// Connect to the database and set up models and schemas
+require("./startup/database")()
 
 
 
