@@ -1,5 +1,6 @@
 const express = require("express")
-
+const categoryRouter = require("../routes/category")
+const templateRouter = require("../routes/template")
 
 
 /**
@@ -11,6 +12,7 @@ module.exports = function(app){
     // Json middleware function. It is not a route handler
     // but added it here, so the code becomes cleaner
     app.use(express.json())
-
-    // TO DO: add route handlers to the app
+    // Adding routers to the app
+    app.use("/category", categoryRouter)
+    app.use("/template", templateRouter)
 }
