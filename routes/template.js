@@ -85,5 +85,25 @@ router.put("/", errorHandler(async (req, res) => {
     res.json(template)
 }))
 
+/**
+ * Route handler to delete a template
+ */
+router.delete("/", errorHandler(async (req, res) => {
+    // Checking if the body of the request is undefined or not
+    if(req.query.id === undefined)
+        return res.status(400).send("No template id provided")
+
+
+    // Finding the template specified by the client and deleting it
+    const template = await Template.findByIdAndRemove(req.query.id)
+    if(!template){
+        return res.status(404).send("template not found")
+    }
+
+    // Sending the deleted template to the client
+    res.json(template)
+}))
+
+
 
 module.exports = router
