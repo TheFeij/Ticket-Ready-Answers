@@ -13,7 +13,7 @@ const winston = require("winston");
 module.exports = function(routeHandler){
     return async (req, res) => {
         try {
-            routeHandler(req, res)
+            await routeHandler(req, res)
         } catch (exception){
             winston.error(exception.message, exception)
         }
