@@ -8,6 +8,7 @@ const templateSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true,
+        unique: true,
         minLength: 1,
         maxLength: 128
     },
