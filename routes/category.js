@@ -36,7 +36,7 @@ router.post("/", errorHandler(async (req, res) => {
     // Creating a new category
     const category = new Category({
         name: req.body.name,
-        subCategories: parentCategory ? parentCategory._id : null,
+        parent: parentCategory ? parentCategory._id : null,
     })
 
     // Saving the category to the database
