@@ -9,6 +9,10 @@ const _ = require("lodash")
 
 /**
  * Route handler to create a new template
+ * it receives the information of the template to be added, in req.body
+ * then validates the information, then finds the category id of the
+ * category name received from the user and creates a template document and
+ * saves it to the database
  */
 router.post("/", errorHandler(async (req, res) => {
     // Checking if the body of the request is undefined or not
@@ -44,6 +48,8 @@ router.post("/", errorHandler(async (req, res) => {
 
 /**
  * Route handler to edit an existing template
+ * this route handler receives updated information of template in req.body
+ * and the id of the template to be deleted in the req.query.id
  * this method edits the whole template, so if for example client wants to
  * only change the title of the template. client should send the whole template
  * information including title, description and category name but sending the old
@@ -87,9 +93,11 @@ router.put("/", errorHandler(async (req, res) => {
 
 /**
  * Route handler to delete a template
+ * this route handler receives id of the template to be deleted in req.query.id
+ * and finds the template with that id and deletes it
  */
 router.delete("/", errorHandler(async (req, res) => {
-    // Checking if the body of the request is undefined or not
+    // Checking if the query parameter id is defined or not
     if(req.query.id === undefined)
         return res.status(400).send("No template id provided")
 
