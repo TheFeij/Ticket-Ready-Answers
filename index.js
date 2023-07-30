@@ -8,12 +8,12 @@ const https = require("https")
 
 // Load environment variables from the .env file using 'dotenv' package
 require('dotenv').config()
-// Set up application routes by importing and calling the 'routes' module
-require("./startup/routes")(app)
 // Initialize logging configuration to capture application logs
 require("./startup/logging")()
 // Add listeners to handle unhandled errors
 require("./startup/errors")()
+// Set up application routes by importing and calling the 'routes' module
+require("./startup/routes")(app)
 // Connect to the database and set up models and schemas
 require("./startup/database")()
 
