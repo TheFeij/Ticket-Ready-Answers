@@ -8,13 +8,14 @@ const categorySchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
+        unique: true,
         minLength: 1,
         maxLength: 64
     },
-    subCategories: [{
+    parent: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "category"
-    }]
+        default: null,
+    }
 })
 
 // Creating the category model using categorySchema
