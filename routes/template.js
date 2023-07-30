@@ -38,8 +38,8 @@ router.post("/", errorHandler(async (req, res) => {
     // Saving the template to the database
     await template.save()
 
-    // Sending a message to the client
-    res.send("Template added successfully!")
+    // Sending the created template to the client
+    res.json(template)
 }))
 
 
