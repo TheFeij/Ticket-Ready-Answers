@@ -60,6 +60,10 @@ router.put("/", errorHandler(async (req, res) => {
     if(req.body === undefined)
         return res.status(400).send("No object found in the body")
 
+    // Checking if the query parameter id is defined or not
+    if(req.query.id === undefined)
+        return res.status(400).send("No template id provided")
+
     // Validating client's new template information
     const {error} = validateTemplate(
         _.pick(req.body, ["title", "description", "category"]))
