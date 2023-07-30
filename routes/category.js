@@ -42,8 +42,8 @@ router.post("/", errorHandler(async (req, res) => {
     // Saving the category to the database
     await category.save()
 
-    // Sending a message to the client
-    res.send("Category added successfully!")
+    // Sending the category to the client
+    res.json(category)
 }))
 
 
