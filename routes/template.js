@@ -23,11 +23,11 @@ router.post("/", errorHandler(async (req, res) => {
     const {error} = validateTemplate(
         _.pick(req.body, ["title", "description", "category"]))
     if(error){
-        res.status(400).send(error.details[0].message)
+        return res.status(400).send(error.details[0].message)
     }
 
     // Finding the category specified by the client
-    const category = await Category.findOne({name: req.body.category})
+    const category = await Category.findById(req.body.category)
     if(!category){
         return res.status(404).send("Category not found")
     }
@@ -36,7 +36,7 @@ router.post("/", errorHandler(async (req, res) => {
     const template = new Template({
         title: req.body.title,
         description: req.body.description,
-        category: category._id
+        category: req.body.category
     })
 
     // Saving the template to the database
@@ -68,7 +68,7 @@ router.put("/", errorHandler(async (req, res) => {
     const {error} = validateTemplate(
         _.pick(req.body, ["title", "description", "category"]))
     if(error){
-        res.status(400).send(error.details[0].message)
+        return res.status(400).send(error.details[0].message)
     }
 
     // Finding the template specified by the client
@@ -78,7 +78,7 @@ router.put("/", errorHandler(async (req, res) => {
     }
 
     // Finding the category specified by the client
-    const category = await Category.findOne({name: req.body.category})
+    const category = await Category.findById(req.body.category)
     if(!category){
         return res.status(404).send("Category not found")
     }
@@ -86,7 +86,7 @@ router.put("/", errorHandler(async (req, res) => {
     // Editing the information
     template.title = req.body.title
     template.description = req.body.description
-    template.category = category._id
+    template.category = req.body.category
 
     // Saving the template to the database
     await template.save()
