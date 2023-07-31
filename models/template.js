@@ -48,10 +48,8 @@ function validateTemplate(template){
             .min(1)
             .max(1024),
         category: Joi
-            .string()
+            .objectId()
             .required()
-            .min(1)
-            .max(64),
     })
 
     return schema.validate(template)
