@@ -22,6 +22,7 @@ require("./startup/database")()
 // Set the port number from environment variables. If not defined, set it to 3000
 const PORT = process.env.PORT || 3000
 
+let server
 /**
  * I recommend using HTTPS instead of HTTP for a more secure connection but that requires
  * ssl key and certificate, so if you have your own key and certificate, Place them in the
@@ -37,14 +38,18 @@ if(process.env.HTTPS){
 
     // Creating an HTTPS server that uses the SSL key and certificate,
     // and points to the Express app
-    https
-        .createServer(httpsOptions, app)
-        .listen(PORT, ()=>{
-            winston.info(`HTTPS server listening on port ${PORT}...`)
-        })
+    server = https
+                .createServer(httpsOptions, app)
+                .listen(PORT, ()=>{
+                    winston.info(`HTTPS server listening on port ${PORT}...`)
+                })
 } else {
     // Starting an HTTP server on the defined port
-    app.listen(PORT, ()=>{
+    server = app.listen(PORT, ()=>{
         winston.info(`HTTP server listening on port ${PORT}...`)
     })
 }
+
+
+
+module.exports = server
