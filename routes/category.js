@@ -39,6 +39,54 @@ router.post("/", errorHandler(async (req, res) => {
     res.json(category)
 }))
 
+/**
+ * Route handler to edit an existing category
+ * this route handler receives updated information of category in req.body
+ * and the id of the category to be deleted in the req.query.id
+ * this method edits the whole category information, so if for example client wants to
+ * only change the name of the category. client should send the whole category
+ * information including name and parent id of the category but sending the current
+ * parent id so only the title changes
+ */
+router.put("/", errorHandler(async (req, res) => {
+    // Checking if the body of the request is undefined or not
+    if(req.body === undefined)
+        return res.status(400).send("No object found in the body")
+
+    // Checking if the query parameter id is defined or not
+    if(req.query.id === undefined)
+        return res.status(400).send("No category id provided")
+
+    // Validating client's new category information
+    const {error} = validateCategory(
+        _.pick(req.body, ["name", "parent"]))
+    if(error){
+        res.status(400).send(error.details[0].message)
+    }
+
+    // Finding the category specified by the client
+    const category = await Category.findById(req.query.id)
+    if(!category){
+        return res.status(404).send("Category not found")
+    }
+
+    // Finding the parent category specified by the client
+    const parent = await Category.findById(req.body.parent)
+    if(!parent){
+        return res.status(404).send("Parent category not found")
+    }
+
+    // Editing the information
+    category.name = req.body.name
+    category.parent = req.body.parent
+
+    // Saving the category to the database
+    await category.save()
+
+    // Sending the edited category to the client
+    res.json(category)
+}))
+
 
 
 module.exports = router
