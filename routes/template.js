@@ -125,7 +125,12 @@ router.delete("/", errorHandler(async (req, res) => {
 router.get("/", errorHandler(async (req, res) => {
     // Checking if the query parameter id is defined or not
     if(req.query.id === undefined)
-        return res.status(400).send("No template id provided")
+        return res.status(400).send("No Category id provided")
+
+    const category = await Category.findById(req.query.id)
+    if(!category){
+        return res.status(404).send("Category not Found")
+    }
 
     let templates
     if(req.query.children){
