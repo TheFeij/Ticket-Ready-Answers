@@ -109,8 +109,42 @@ async function getAllCategories(){
     }
 }
 
+/**
+ * Recursively retrieves the IDs of all subcategories of the provided category ID, including its own ID.
+ *
+ * @param {string} categoryId - The ID of the category to start retrieving subcategories from.
+ * @returns {Promise<Array>} A promise that resolves to an array containing the IDs of the category and all its
+ *                          subcategories.
+ *                          The array includes the current category's ID and the IDs of its nested subcategories.
+ *                          If the provided category ID is invalid or the category doesn't have any subcategories,
+ *                          the function returns an empty array.
+ * @throws {Error} If there's an issue with the database query or connection.
+ */
+async function getAllSubcategoryIds(categoryId) {
+    const category = await Category.findById(categoryId)
+
+    if (!category) {
+        // If the category with the provided ID doesn't exist, return an empty array
+        return []
+    }
+
+    // Find all subcategories of the current category
+    const subCategories = await Category.find({ parent: categoryId })
+
+    // Recursively get subcategory IDs for each subcategory
+    const subcategoryIds = await Promise.all(
+        subCategories.map((subCategory) => getAllSubcategoryIds(subCategory._id))
+    )
+
+    // Flatten the array of subcategory IDs and add the current category's ID.
+    const allSubcategoryIds = [category._id, ...subcategoryIds.flat()]
+
+    return allSubcategoryIds
+}
+
 
 
 module.exports.Category = Category
 module.exports.validateCategory = validateCategory
 module.exports.getAllCategories = getAllCategories
+module.exports.getAllSubcategoryIds = getAllSubcategoryIds
