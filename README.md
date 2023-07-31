@@ -56,7 +56,7 @@ node index.js
 The application will run on the specified port, accessible via HTTP or HTTPS based on the HTTPS environment variable.
 
 ## API Documentation
-The API provides endpoints for managing templates and categories. Below are the available routes and their functionalities:
+The API provides endpoints for managing templates and categories. You can use tools like Postman to send HTTP/HTTPS requests and use these APIs. Below are the available routes and their functionalities:
 
 ### Template Routes
 #### POST /template: Create a new template.
