@@ -155,3 +155,7 @@ Automated tests are included in the test folder. Unit and integration tests are 
 Note that these tests does not cover all functionalities in the project, instead
 they are added as a sample to show my ability in writing unit and integration tests. there are only unit tests for two functions in the models folder files:
 validateCategory and validateTemplate. and also integration tests for the POST method of the template file in the routers folder
+
+## Other Projects:
+You can also check my other project with express.js with concentration on authentication and authorization in the link below:
+https://github.com/TheFeij/Simple-Shop
