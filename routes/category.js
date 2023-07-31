@@ -12,7 +12,7 @@ const _ = require("lodash")
 router.post("/", errorHandler(async (req, res) => {
     // Checking if the body of the request is undefined or not
     if(req.body === undefined)
-        return res.status(400).send("No template object found in the body")
+        return res.status(400).send("No category object found in the body")
 
     // Validating client's category information
     const {error} = validateCategory(
@@ -21,22 +21,15 @@ router.post("/", errorHandler(async (req, res) => {
         res.status(400).send(error.details[0].message)
     }
 
-    let parentCategory
-    if(req.body.parent === undefined){
-        parentCategory = null
-    } else {
-        // Finding the parent category specified by the client
-        parentCategory = await Category.findOne({name: req.body.parent})
-        if(!parentCategory){
-            return res.status(404).send("parent category not found")
-        }
+    const parentCategory = await Category.findById(req.body.parent)
+    if(!parentCategory){
+        return res.status(404).send("parent category not found")
     }
-
 
     // Creating a new category
     const category = new Category({
         name: req.body.name,
-        parent: parentCategory ? parentCategory._id : null,
+        parent: req.body.parent,
     })
 
     // Saving the category to the database
