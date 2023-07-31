@@ -1,4 +1,4 @@
-const {Category} = require("../models/category")
+const {Category, getAllSubcategoryIds} = require("../models/category")
 const errorHandler = require("../middlewares/errorHandler")
 const {Template, validateTemplate} = require("../models/template");
 const express = require("express")
@@ -114,6 +114,33 @@ router.delete("/", errorHandler(async (req, res) => {
 
     // Sending the deleted template to the client
     res.json(template)
+}))
+
+/**
+ * Route handler to get templates of a given category
+ * client sends the id of the template and then if the query parameter "children" is false
+ * or not defined it returns the templates of that exact catgory but if the children=true
+ * it also returns templates of its subcategories(children)
+ */
+router.get("/", errorHandler(async (req, res) => {
+    // Checking if the query parameter id is defined or not
+    if(req.query.id === undefined)
+        return res.status(400).send("No template id provided")
+
+    let templates
+    if(req.query.children){
+        // Get all subcategory IDs for the provided category ID, including the category itself
+        const categoryIds = await getAllSubcategoryIds(req.query.id)
+
+        // If the "children" query parameter is defined, find templates with categories matching
+        // any of the subcategory IDs
+        templates = await Template.find({ category: { $in: categoryIds } });
+    } else {
+        templates = await Template.find({category: req.query.id})
+    }
+
+    // Sending templates to the client
+    res.json(templates)
 }))
 
 
