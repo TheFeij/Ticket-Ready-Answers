@@ -16,6 +16,7 @@ module.exports = function(routeHandler){
             await routeHandler(req, res)
         } catch (exception){
             winston.error(exception.message, exception)
+            res.status(500).send(exception.message)
         }
     }
 }
