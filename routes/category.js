@@ -79,15 +79,22 @@ router.put("/", errorHandler(async (req, res) => {
         return res.status(404).send("Category not found")
     }
 
-    // Finding the parent category specified by the client
-    const parent = await Category.findById(req.body.parent)
-    if(!parent){
-        return res.status(404).send("Parent category not found")
+    // if user didn't define a parent property the parent is null
+    // otherwise we check if the specified parent exists or not
+    let parentCategory
+    if(req.body.parent === undefined){
+        parentCategory = null
+    } else {
+        const category = await Category.findById(req.body.parent)
+        if(!category){
+            return res.status(404).send("parent category not found")
+        }
+        parentCategory = category._id
     }
 
     // Editing the information
     category.name = req.body.name
-    category.parent = req.body.parent
+    category.parent = parentCategory
 
     // Saving the category to the database
     await category.save()
