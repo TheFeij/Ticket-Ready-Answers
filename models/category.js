@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const Joi = require("joi")
+Joi.objectId = require('joi-objectid')(Joi)
 
 
 
@@ -37,10 +38,8 @@ function validateCategory(category){
             .min(1)
             .max(64),
         parent: Joi
-            .string()
+            .objectId()
             .default(null)
-            .min(1)
-            .max(64),
     })
 
     return schema.validate(category)
