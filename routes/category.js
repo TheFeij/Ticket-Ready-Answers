@@ -1,4 +1,4 @@
-const {validateCategory, Category} = require("../models/category")
+const {validateCategory, Category, getAllCategories} = require("../models/category")
 const errorHandler = require("../middlewares/errorHandler")
 const express = require("express")
 const router = express.Router()
@@ -21,15 +21,24 @@ router.post("/", errorHandler(async (req, res) => {
         res.status(400).send(error.details[0].message)
     }
 
-    const parentCategory = await Category.findById(req.body.parent)
-    if(!parentCategory){
-        return res.status(404).send("parent category not found")
+    // if user didn't define a parent property the parent is null
+    // otherwise we check if the specified parent exists or not
+    let parentCategory
+    if(req.body.parent === undefined){
+        parentCategory = null
+    } else {
+        const category = await Category.findById(req.body.parent)
+        if(!category){
+            return res.status(404).send("parent category not found")
+        }
+        parentCategory = category._id
     }
+
 
     // Creating a new category
     const category = new Category({
         name: req.body.name,
-        parent: req.body.parent,
+        parent: parentCategory,
     })
 
     // Saving the category to the database
@@ -87,6 +96,16 @@ router.put("/", errorHandler(async (req, res) => {
     res.json(category)
 }))
 
+/**
+ * Route handler get the full hierarchical tree categories
+ */
+router.get("/", errorHandler(async (req, res) => {
+    // get all categories hierarchical tree
+    const categories = await getAllCategories()
+
+    // sending categories to the client
+    res.json(categories)
+}))
 
 
 module.exports = router
